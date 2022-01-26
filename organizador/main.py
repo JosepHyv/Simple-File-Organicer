@@ -1,30 +1,34 @@
+#!/usr/bin/python
 import os 
 import shutil
 import pathlib
 
 
-nombre = "ArchivosOrganizados/"
+nombre = "ArchivosOrganizados"
 
 def getHome():
-	return str(os.path.expanduser("~")) + "/"
+	home = str(os.path.expanduser("~"))
+	home = os.path.join(home + "")
+	return str(home)
 
 def updateContenedor(padre, lista, destino):
 	directions = {}
 	usuario = getHome()
-	dircompleta = usuario + destino + padre + "/"
+	dircompleta = os.path.join(usuario, destino, padre, "")# usuario + destino + padre + "/"
 	fileList = []
 	if os.path.isdir(dircompleta):
 		fileList = os.listdir(dircompleta)
 	else:
-		print("El directorio no existe ", usuario + nombre, " Creando ")
+		print("El directorio no existe ", dircompleta, " Creando ")
 		os.mkdir(dircompleta)
 	for extension in lista:
-		if not os.path.isdir(dircompleta + extension[1::]):
-			os.mkdir(dircompleta + extension[1::] )
+		dirExtension = os.path.join(dircompleta, extension[1::])
+		if not os.path.isdir(dirExtension):
+			os.mkdir(dirExtension)
 		fileList.append(extension[1::])
 	print("DEBUG\n", *fileList, sep=" <-> ")
 	for dirs in fileList:
-		directions[dirs] = dircompleta + dirs +  "/"
+		directions[dirs] = os.path.join(dircompleta, dirs)
 	return directions
 
 def lastname(line):
@@ -59,11 +63,15 @@ def main():
 	lista = os.listdir(dirs)
 	extensiones = []
 	archivos = []
+
+	print(*lista, end="\n")
+
 	for files in lista:
 		#print(dirs + "/" + files ) 
-		if os.path.isfile(dirs + "/" + files):
+		direction = os.path.join(dirs, files)
+		if os.path.isfile(direction):
 			extensiones.append(getExtension(files))
-			archivos.append(dirs + "/" + files)
+			archivos.append(direction)
 	direcciones = updateContenedor(lastname(dirs), extensiones, nombre)
 #	print(direcciones)
 #	print(*archivos, sep="\n")
