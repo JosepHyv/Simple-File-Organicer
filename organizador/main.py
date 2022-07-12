@@ -11,6 +11,13 @@ def getHome():
 	home = os.path.join(home + "")
 	return str(home)
 
+def createRootDir():
+	direccion = os.path.join(getHome(), nombre)
+	if not os.path.isdir(direccion):
+		os.mkdir(direccion)
+		return 0
+	return 1
+
 def updateContenedor(padre, lista, destino):
 	directions = {}
 	usuario = getHome()
@@ -19,6 +26,7 @@ def updateContenedor(padre, lista, destino):
 	if os.path.isdir(dircompleta):
 		fileList = os.listdir(dircompleta)
 	else:
+		createRootDir()
 		print("El directorio no existe ", dircompleta, " Creando ")
 		os.mkdir(dircompleta)
 	for extension in lista:
